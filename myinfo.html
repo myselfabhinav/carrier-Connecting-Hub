@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .info-item {
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            color: #333;
+        }
+        .info-value {
+            color: #495057;
+        }
+        h2 {
+            margin-bottom: 30px;
+            font-size: 24px;
+            color: #007bff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-user icon"></i> My Information</h2>
+        <div id="userInfo"></div>
+    </div>
+
+    <!-- Include Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCYfF54XEX9BcOhxRWNw0Tw2Q5F3LMbMB8",
+            authDomain: "carrier-connecting-hub.firebaseapp.com",
+            projectId: "carrier-connecting-hub",
+            storageBucket: "carrier-connecting-hub.appspot.com",
+            messagingSenderId: "251539793563",
+            appId: "1:251539793563:web:d4f9067c4102ac47e8083e",
+            measurementId: "G-QNLGVX55Z5"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        
+        // Get a reference to the Firebase Realtime Database
+        const database = firebase.database();
+        const userRef = database.ref('users/' + firebase.auth().currentUser.uid);
+
+        // Retrieve user data from the database
+        userRef.once('value', (snapshot) => {
+            console.log("Snapshot:", snapshot.val()); // Debug log
+
+            const userData = snapshot.val();
+            if (userData) {
+                console.log("User data:", userData); // Debug log
+
+                // Display user information
+                const userInfoContainer = document.getElementById('userInfo');
+                userInfoContainer.innerHTML = `
+                    <div class="info-item">
+                        <span class="info-label">Full Name:</span>
+                        <span class="info-value">${userData.fullname}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value">${userData.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone Number:</span>
+                        <span class="info-value">${userData.phone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Gender:</span>
+                        <span class="info-value">${userData.gender}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date of Birth:</span>
+                        <span class="info-value">${userData.dob}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Highest Qualification:</span>
+                        <span class="info-value">${userData.qualification}</span>
+                    </div>
+                `;
+            } else {
+                console.log("No data available");
+            }
+        });
+    </script>
+</body>
+</html>
